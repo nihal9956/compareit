@@ -32,7 +32,7 @@ function Dashboard() {
     }, []);
 
     const handleClearComparision = () => {
-        setComparisionItems([]);
+        setComparisionItems([])
     }
     const handleIndividualComparisionRemove = (itemId) => {
         let copyOfComparisionItems = [...comparisionItems] || [...JSON.parse(storedData)]
