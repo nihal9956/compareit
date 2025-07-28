@@ -14,54 +14,54 @@ import { ToastContainer, toast } from "react-toastify";
 
 export default function ImgMediaCard({
     cardData,
-    comparisionItems,
-    setComparisionItems,
-    setOpenComparisionWindow,
+    comparisonItems,
+    setcomparisonItems,
+    setOpencomparisonWindow,
 }) {
 
     const theme = useTheme();
 
-    const isSelected = comparisionItems?.some(item => item._id === cardData._id);
+    const isSelected = comparisonItems?.some(item => item._id === cardData._id);
 
     React.useEffect(() => {
-        if (comparisionItems?.length) {
+        if (comparisonItems?.length) {
             try {
-                const storedData = localStorage.getItem('comparisionItems');
+                const storedData = localStorage.getItem('comparisonItems');
                 const existingItems = storedData ? JSON.parse(storedData) : [];
 
                 // Combine and remove duplicates by _id
-                const combined = [...existingItems, ...comparisionItems];
+                const combined = [...existingItems, ...comparisonItems];
                 const uniqueItems = Array.from(
                     new Map(combined.map(item => [item._id, item])).values()
                 );
 
-                localStorage.setItem('comparisionItems', JSON.stringify(uniqueItems));
+                localStorage.setItem('comparisonItems', JSON.stringify(uniqueItems));
             } catch (e) {
                 console.error('Failed to save to localStorage:', e);
             }
         }
-    }, [comparisionItems]);
+    }, [comparisonItems]);
 
 
-    const handleComparision = (cardData, buttonText) => {
-        if (buttonText === 'See comparision') {
-            setOpenComparisionWindow(true);
+    const handleComparison = (cardData, buttonText) => {
+        if (buttonText === 'See comparison') {
+            setOpencomparisonWindow(true);
         } else {
-            if (comparisionItems?.length === 3) {
+            if (comparisonItems?.length === 3) {
                 notify();
             }
-            setComparisionItems(prev => {
+            setcomparisonItems(prev => {
                 const exists = prev.some(p => p._id === cardData._id);
-                return exists || comparisionItems?.length === 3 ? prev : [...prev, cardData];
+                return exists || comparisonItems?.length === 3 ? prev : [...prev, cardData];
             });
         }
     };
 
     const renderButtonText = currentCardData => {
-        let isInList = comparisionItems?.some(item => item._id === currentCardData?._id);
-        if (comparisionItems?.length >= 2 && isInList) return 'See comparision';
-        else if (comparisionItems?.length === 1 && isInList) return 'Added';
-        else return 'Add to comparision';
+        let isInList = comparisonItems?.some(item => item._id === currentCardData?._id);
+        if (comparisonItems?.length >= 2 && isInList) return 'See comparison';
+        else if (comparisonItems?.length === 1 && isInList) return 'Added';
+        else return 'Add to comparison';
     };
 
     const notify = () => toast.error("Only up to 3 products can be compared.");
@@ -190,7 +190,7 @@ export default function ImgMediaCard({
                             },
                         }}
                         variant="contained"
-                        onClick={() => handleComparision(cardData, renderButtonText(cardData))}
+                        onClick={() => handleComparison(cardData, renderButtonText(cardData))}
                     >
                         {renderButtonText(cardData)}
                     </Button>

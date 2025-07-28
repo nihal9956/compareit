@@ -3,21 +3,21 @@ import { mockData } from '../MockData'
 import Header from '../components/Header'
 import ImgMediaCard from '../components/Card'
 import { Grid, Typography } from '@mui/material'
-import AnchorTemporaryDrawer from '../components/Comparision'
+import AnchorTemporaryDrawer from '../components/Comparison'
 
 function Dashboard() {
     const [currentCategoryData, setCurrentCategoryData] = useState([]);
     const [currentCategory, setCurrentCategory] = useState('Mobiles');
-    const [comparisionItems, setComparisionItems] = useState([]);
-    const [openComparisionWindow, setOpenComparisionWindow] = useState(false);
-    let storedData = localStorage.getItem('comparisionItems');
-    let parsedComparisionItems = [];
+    const [comparisonItems, setcomparisonItems] = useState([]);
+    const [opencomparisonWindow, setOpencomparisonWindow] = useState(false);
+    let storedData = localStorage.getItem('comparisonItems');
+    let parsedcomparisonItems = [];
     try {
-        const storedData = localStorage.getItem('comparisionItems');
-        parsedComparisionItems = storedData ? JSON.parse(storedData) : [];
+        const storedData = localStorage.getItem('comparisonItems');
+        parsedcomparisonItems = storedData ? JSON.parse(storedData) : [];
     } catch (e) {
         console.error('Invalid JSON in localStorage:', e);
-        parsedComparisionItems = [];
+        parsedcomparisonItems = [];
     }
 
     useEffect(() => {
@@ -28,23 +28,23 @@ function Dashboard() {
 
     useEffect(() => {
         let initialData = storedData ? JSON.parse(storedData) : [];
-        setComparisionItems(initialData);
+        setcomparisonItems(initialData);
     }, []);
 
-    const handleClearComparision = () => {
-        setComparisionItems([])
+    const handleClearcomparison = () => {
+        setcomparisonItems([])
     }
-    const handleIndividualComparisionRemove = (itemId) => {
-        let copyOfComparisionItems = [...comparisionItems] || [...JSON.parse(storedData)]
-        let indexOfItem = comparisionItems.findIndex((item) => item._id === itemId);
-        copyOfComparisionItems.splice(indexOfItem, 1);
-        if (copyOfComparisionItems.length < 2) {
-            setComparisionItems([]);
-            setOpenComparisionWindow(false);
+    const handleIndividualcomparisonRemove = (itemId) => {
+        let copyOfcomparisonItems = [...comparisonItems] || [...JSON.parse(storedData)]
+        let indexOfItem = comparisonItems.findIndex((item) => item._id === itemId);
+        copyOfcomparisonItems.splice(indexOfItem, 1);
+        if (copyOfcomparisonItems.length < 2) {
+            setcomparisonItems([]);
+            setOpencomparisonWindow(false);
         }
-        localStorage.removeItem('comparisionItems');
-        localStorage.setItem('comparisionItems', JSON.stringify(copyOfComparisionItems));
-        setComparisionItems(copyOfComparisionItems);
+        localStorage.removeItem('comparisonItems');
+        localStorage.setItem('comparisonItems', JSON.stringify(copyOfcomparisonItems));
+        setcomparisonItems(copyOfcomparisonItems);
 
     }
 
@@ -57,18 +57,18 @@ function Dashboard() {
             />
             <Grid container sx={{ px: 5,mt:2, width: '100%' }} spacing={3}>
                 {
-                    currentCategoryData?.map((data) => <Grid key={data?.name} size={{ lg: 3, md: 4, sm: 6, xs: 12 }}><ImgMediaCard cardData={data} comparisionItems={comparisionItems.length ? comparisionItems : parsedComparisionItems} setComparisionItems={setComparisionItems} setOpenComparisionWindow={setOpenComparisionWindow} /></Grid>)
+                    currentCategoryData?.map((data) => <Grid key={data?.name} size={{ lg: 3, md: 4, sm: 6, xs: 12 }}><ImgMediaCard cardData={data} comparisonItems={comparisonItems.length ? comparisonItems : parsedcomparisonItems} setcomparisonItems={setcomparisonItems} setOpencomparisonWindow={setOpencomparisonWindow} /></Grid>)
                 }
                 {
                     !currentCategoryData.length && <Typography variant='h4' sx={{m:'10rem auto',whiteSpace:'nowrap'}}>😔 No product found.</Typography>
                 }
             </Grid>
             <AnchorTemporaryDrawer
-                handleIndividualComparisionRemove={handleIndividualComparisionRemove}
-                handleClearComparision={handleClearComparision}
-                comparisionItems={comparisionItems.length ? comparisionItems : parsedComparisionItems}
-                setOpenComparisionWindow={setOpenComparisionWindow}
-                openComparisionWindow={openComparisionWindow}
+                handleIndividualComparisonRemove={handleIndividualcomparisonRemove}
+                handleClearComparison={handleClearcomparison}
+                comparisonItems={comparisonItems.length ? comparisonItems : parsedcomparisonItems}
+                setOpencomparisonWindow={setOpencomparisonWindow}
+                opencomparisonWindow={opencomparisonWindow}
 
             />
         </div>

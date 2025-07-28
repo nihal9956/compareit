@@ -13,11 +13,11 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 
 export default function ComparisonDrawer({
-    handleClearComparision,
-    comparisionItems,
-    openComparisionWindow,
-    setOpenComparisionWindow,
-    handleIndividualComparisionRemove
+    handleClearComparison,
+    comparisonItems,
+    opencomparisonWindow,
+    setopencomparisonWindow,
+    handleIndividualComparisonRemove
 }) {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
@@ -61,18 +61,18 @@ export default function ComparisonDrawer({
     };
 
     const mostCommonValues = getMostCommonFieldValues(
-        comparisionItems,
+        comparisonItems,
         fieldsToCompare.map((f) => f.key)
     );
 
     React.useEffect(() => {
-        if (comparisionItems?.length === 1) {
+        if (comparisonItems?.length === 1) {
             setState({ ...state, bottom: false });
         }
-        if (comparisionItems?.length >= 2 && openComparisionWindow) {
+        if (comparisonItems?.length >= 2 && opencomparisonWindow) {
             setState({ ...state, bottom: true });
         }
-    }, [comparisionItems, openComparisionWindow]);
+    }, [comparisonItems, opencomparisonWindow]);
 
     const toggleDrawer = (anchor, open) => (event) => {
         if (
@@ -81,13 +81,13 @@ export default function ComparisonDrawer({
         ) {
             return;
         }
-        setOpenComparisionWindow(false);
+        setopencomparisonWindow(false);
         setState({ ...state, [anchor]: open });
     };
 
-    const clearComparision = () => {
-        handleClearComparision();
-        localStorage.setItem('comparisionItems', [])
+    const clearComparison = () => {
+        handleClearComparison();
+        localStorage.setItem('comparisonItems', [])
         setState({ ...state, bottom: false });
     }
 
@@ -124,7 +124,7 @@ export default function ComparisonDrawer({
                     <Typography variant="h5" sx={{ fontWeight: 'bold',fontSize:`${isMobile&&'1.3rem'}` }}>
                         Comparison
                     </Typography>
-                    <Button variant="outlined" sx={{ color: theme.palette.action.button,fontSize:`${isMobile&&'0.8rem'}` }} onClick={clearComparision}>
+                    <Button variant="outlined" sx={{ color: theme.palette.action.button,fontSize:`${isMobile&&'0.8rem'}` }} onClick={clearComparison}>
                         Clear comparison
                     </Button>
                 </Grid>
@@ -141,7 +141,7 @@ export default function ComparisonDrawer({
                 }}
             >
                 <Grid container spacing={3} sx={{ display: 'flex', justifyContent: 'center' }}>
-                    {comparisionItems?.map((item) => (
+                    {comparisonItems?.map((item) => (
                         <Grid
                             key={item?._id}
                             size={{ lg: 3, md: 6, sm: 6, xs: 12 }}
@@ -157,7 +157,7 @@ export default function ComparisonDrawer({
                             }}
                         >
                             <CloseIcon
-                                onClick={() => handleIndividualComparisionRemove(item?._id)}
+                                onClick={() => handleIndividualComparisonRemove(item?._id)}
                                 sx={{
                                     position: 'absolute',
                                     top: 10,
