@@ -7,10 +7,13 @@ import { ComparePanel } from '../features/compare/ComparePanel';
 import { useCompare } from '../features/compare/useCompare';
 import { products } from '../data/products.mock';
 import { Product } from '../features/compare/compare.types';
+import { useDebouncedValue } from '../hooks/useDebouncedValue';
 
 const ProductComparePage: React.FC = () => {
-  const [currentCategory, setCurrentCategory] = useState<string>('Mobiles');
-  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [currentCategory, setCurrentCategory] = useState('Mobiles');
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const debouncedSearchQuery = useDebouncedValue(searchQuery, 300);
 
   const {
     items: comparisonItems,
@@ -32,18 +35,20 @@ const ProductComparePage: React.FC = () => {
         product.category === currentCategory;
 
       const matchesSearch =
-        product.name.toLowerCase().includes(searchQuery);
+        product.name
+          .toLowerCase()
+          .includes(debouncedSearchQuery);
 
       return matchesCategory && matchesSearch;
     });
-  }, [currentCategory, searchQuery]);
+  }, [currentCategory, debouncedSearchQuery]);
 
   return (
     <>
       <Header
         currentCategory={currentCategory}
         setCurrentCategory={setCurrentCategory}
-        onSearch={handleSearch}  
+        onSearch={handleSearch}
       />
 
       <Grid container sx={{ px: 5, mt: 2 }}>
