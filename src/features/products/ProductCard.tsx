@@ -58,6 +58,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
     '&:hover': {
       transform: 'translateY(-4px)',
       boxShadow: '0 12px 28px rgba(0,0,0,0.12)',
+      cursor: 'pointer',
     },
   }}
 >
@@ -73,6 +74,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
             objectFit: 'contain',
             mx: 'auto',
             mt: 2,
+            borderRadius: '8px',
           }}
         />
 

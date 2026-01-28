@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {
-  Grid,
   IconButton,
   Popover,
   List,
@@ -18,6 +17,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import BedtimeIcon from '@mui/icons-material/Bedtime';
 import SunnyIcon from '@mui/icons-material/Sunny';
 import SearchIcon from '@mui/icons-material/Search';
+import ClearIcon from '@mui/icons-material/Clear';
 
 import Logo from '../assets/logo.png';
 import { useColorMode } from '../theme/ThemeContext';
@@ -39,34 +39,68 @@ const Header: React.FC<HeaderProps> = ({
   const { toggleColorMode, mode } = useColorMode();
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const [searchValue, setSearchValue] = useState('');
+
   const open = Boolean(anchorEl);
 
+  /* ------------------ Handlers ------------------ */
   const handleNavClick = (category: string) => {
     setCurrentCategory(category);
     setAnchorEl(null);
   };
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onSearch(e.target.value);
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchValue(value);
+    onSearch(value);
   };
 
+  const handleClearSearch = () => {
+    setSearchValue('');
+    onSearch('');
+  };
+
+  /* ------------------ Desktop Navigation ------------------ */
   const renderDesktopNav = () => (
     <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
-      {categories.map((category) => (
-        <Typography
-          key={category.name}
-          onClick={() => handleNavClick(category.name)}
-          sx={{
-            cursor: 'pointer',
-            fontWeight: category.name === currentCategory ? 600 : 400,
-          }}
-        >
-          {category.name}
-        </Typography>
-      ))}
+      {categories.map((category) => {
+        const isActive = category.name === currentCategory;
+
+        return (
+          <Typography
+            key={category.name}
+            onClick={() => handleNavClick(category.name)}
+            sx={{
+              position: 'relative',
+              cursor: 'pointer',
+              fontWeight: isActive ? 600 : 400,
+              pb: 0.5,
+
+              '&::after': {
+                content: '""',
+                position: 'absolute',
+                left: 0,
+                bottom: 0,
+                height: isActive ? '3px' : '2px',
+                width: isActive ? '100%' : '0%',
+                backgroundColor: 'primary.main',
+                borderRadius: '2px',
+                transition: 'width 0.3s ease',
+              },
+
+              '&:hover::after': {
+                width: '100%',
+              },
+            }}
+          >
+            {category.name}
+          </Typography>
+        );
+      })}
     </Box>
   );
 
+  /* ------------------ Mobile Navigation ------------------ */
   const renderMobileNav = () => (
     <>
       <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
@@ -114,82 +148,83 @@ const Header: React.FC<HeaderProps> = ({
       </Popover>
     </>
   );
-return (
-  <Box sx={{ px: 3, py: 2 }}>
-    {/* Top row */}
-    <Box
-      sx={{
-        display: 'grid',
-        gridTemplateColumns: {
-          xs: '1fr auto',
-          md: '200px 1fr auto',
-        },
-        alignItems: 'center',
-        gap: 2,
-      }}
-    >
-      {/* Logo */}
-      <Box display={'flex'} alignItems={'center'} justifyContent={'right'}>
-        <img
-          src={Logo}
-          alt="logo"
-          style={{ width: '150px', objectFit: 'contain',borderRadius:'18px' }}
-        />
-      </Box>
 
-      {/* Desktop Search */}
-      {!isMobileOrTablet && (
-        <TextField
-          onChange={handleSearch}
-          fullWidth
-          placeholder="Search products"
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon />
-              </InputAdornment>
-            ),
-            sx: { height: 40, borderRadius: 2 },
-          }}
-        />
-      )}
-
-      {/* Nav / Menu */}
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-        {isMobileOrTablet ? (
-          renderMobileNav()
-        ) : (
-          <>
-            {renderDesktopNav()}
-            <IconButton onClick={toggleColorMode} sx={{ ml: 2 }}>
-              {mode === 'dark' ? <BedtimeIcon /> : <SunnyIcon />}
+  /* ------------------ Search Field ------------------ */
+  const renderSearchField = () => (
+    <TextField
+      value={searchValue}
+      onChange={handleSearchChange}
+      fullWidth
+      placeholder="Search products"
+      InputProps={{
+        startAdornment: (
+          <InputAdornment position="start">
+            <SearchIcon />
+          </InputAdornment>
+        ),
+        endAdornment: searchValue && (
+          <InputAdornment position="end">
+            <IconButton onClick={handleClearSearch} size="small">
+              <ClearIcon />
             </IconButton>
-          </>
-        )}
+          </InputAdornment>
+        ),
+        sx: { height: 40, borderRadius: 2 },
+      }}
+    />
+  );
+
+  return (
+    <Box sx={{ px: 3, py: 2 }}>
+      {/* Top Row */}
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: {
+            xs: 'auto 1fr auto',
+            md: '200px 1fr auto',
+          },
+          alignItems: 'center',
+          gap: 2,
+        }}
+      >
+        {/* Logo */}
+        <Box display="flex" alignItems="center" justifyContent="right" >
+          <Box
+            component="img"
+            src={Logo}
+            alt="logo"
+            sx={{
+              width: { xs: 100, sm: 120, md: 150 },
+              height: { xs: 40, sm: 48, md: 'auto' },
+              objectFit: 'contain',
+              borderRadius: '18px',
+            }}
+          />
+        </Box>
+
+        {/* Desktop Search */}
+        {!isMobileOrTablet && renderSearchField()}
+
+        {/* Nav / Actions */}
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+          {isMobileOrTablet ? (
+            renderMobileNav()
+          ) : (
+            <>
+              {renderDesktopNav()}
+              <IconButton onClick={toggleColorMode} sx={{ ml: 2 }}>
+                {mode === 'dark' ? <BedtimeIcon /> : <SunnyIcon />}
+              </IconButton>
+            </>
+          )}
+        </Box>
       </Box>
+
+      {/* Mobile Search */}
+      {isMobileOrTablet && <Box sx={{ mt: 2 }}>{renderSearchField()}</Box>}
     </Box>
-
-    {/* Mobile Search */}
-    {isMobileOrTablet && (
-      <Box sx={{ mt: 2 }}>
-        <TextField
-          onChange={handleSearch}
-          fullWidth
-          placeholder="Search products"
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon />
-              </InputAdornment>
-            ),
-            sx: { height: 40, borderRadius: 2 },
-          }}
-        />
-      </Box>
-    )}
-  </Box>
-);
-
+  );
 };
 
 export default Header;

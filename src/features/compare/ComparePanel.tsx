@@ -65,16 +65,18 @@ export const ComparePanel: React.FC<ComparePanelProps> = ({
             position: 'sticky',
             top: 0,
             zIndex: 10,
-            px: 4,
-            py: 2,
+            px: { xs: 2, md: 4 },
+            py: { xs: 2, md: 2 },
             borderBottom: `1px solid ${theme.palette.divider}`,
             display: 'flex',
-            alignItems: 'center',
+            flexDirection: isMobile ? 'column' : 'row',
+            alignItems: isMobile ? 'flex-start' : 'center',
             justifyContent: 'space-between',
+            gap: 1.5,
           }}
         >
           <Typography
-            variant="h5"
+            variant={isMobile ? 'h6' : 'h5'}
             fontWeight={600}
             fontSize={isMobile ? '1.25rem' : '1.5rem'}
           >
@@ -86,6 +88,11 @@ export const ComparePanel: React.FC<ComparePanelProps> = ({
             color="error"
             size={isMobile ? 'small' : 'medium'}
             onClick={onClear}
+            sx={{
+              alignSelf: isMobile ? 'stretch' : 'auto',
+              width: isMobile ? '100%' : 'auto',
+              mt: isMobile ? 1 : 0,
+            }}
           >
             Clear comparison
           </Button>
@@ -96,26 +103,25 @@ export const ComparePanel: React.FC<ComparePanelProps> = ({
           sx={{
             flex: 1,
             overflowY: 'auto',
-            px: 4,
+            px: { xs: 2, md: 4 },
             py: 3,
           }}
         >
           {/* Responsive grid */}
           <Box
-  sx={{
-    display: 'grid',
-    gridTemplateColumns: {
-      xs: '1fr',
-      sm: 'repeat(2, minmax(280px, 1fr))',
-      md: 'repeat(3, minmax(280px, 1fr))',
-    },
-    gap: 3,
-    justifyContent: 'center',
-    maxWidth: '1200px',
-    mx: 'auto',
-  }}
->
-
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: {
+                xs: '1fr',
+                sm: 'repeat(2, minmax(280px, 1fr))',
+                md: 'repeat(3, minmax(280px, 1fr))',
+              },
+              gap: 3,
+              justifyContent: 'center',
+              maxWidth: '1200px',
+              mx: 'auto',
+            }}
+          >
             {items.map((item) => (
               <Box
                 key={item.id}

@@ -27,15 +27,29 @@ const ProductComparePage: React.FC = () => {
     open,
   } = useCompare();
 
-  // Simulate API delay
   useEffect(() => {
+    setIsLoading(true);
     const timer = setTimeout(() => setIsLoading(false), 600);
     return () => clearTimeout(timer);
   }, [currentCategory]);
 
+
+  useEffect(() => {
+    if (searchQuery === '') {
+      setIsLoading(false);
+      return;
+    }
+
+    setIsLoading(true);
+    const timer = setTimeout(() => setIsLoading(false), 400);
+    return () => clearTimeout(timer);
+  }, [debouncedSearchQuery]);
+
+
   const handleSearch = (query: string) => {
     setSearchQuery(query.toLowerCase());
   };
+
 
   const currentCategoryData = useMemo<Product[]>(() => {
     return products.filter((product) => {
