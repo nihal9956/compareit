@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import ProductCard from './ProductCard';
-import { Product } from '../compare/compare.types';
+import { Product } from '../../types/product.types';
 
 interface ProductListProps {
   products?: Product[];
@@ -62,4 +62,4 @@ const ProductList: React.FC<ProductListProps> = ({
   );
 };
 
-export default ProductList;
+export default React.memo(ProductList);

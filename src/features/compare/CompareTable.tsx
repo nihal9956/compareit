@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
-import { Box, Typography } from '@mui/material';
-import { Product } from './compare.types';
+import { Box, Typography, useTheme } from '@mui/material';
+import { Product } from '../../types/product.types';
 
 interface Field {
   key: keyof Product;
@@ -18,6 +18,8 @@ export function CompareTable({
   currentItem,
   fields,
 }: CompareTableProps) {
+  const theme = useTheme();
+
   const commonValues = useMemo<Record<keyof Product, unknown>>(() => {
     const result = {} as Record<keyof Product, unknown>;
 
@@ -40,7 +42,7 @@ export function CompareTable({
   }, [items, fields]);
 
   return (
-    <Box display="flex" flexDirection="column" gap={1}>
+    <Box display="flex" flexDirection="column" gap={0.75}>
       {fields.map(({ key, label }) => {
         const isDifferent = currentItem[key] !== commonValues[key];
 
@@ -50,27 +52,47 @@ export function CompareTable({
             sx={{
               display: 'flex',
               justifyContent: 'space-between',
-              px: 1,
-              py: 0.5,
-              borderRadius: 1,
-              backgroundColor: isDifferent ? 'warning.light' : 'transparent',
+              alignItems: 'center',
+              py: 0.6,
+              px: 0.25,
+              borderBottom: `1px solid ${theme.palette.divider}`,
+
+              ...(isDifferent && {
+                backgroundColor:
+                  theme.palette.mode === 'light'
+                    ? 'rgba(255, 114, 76, 0.08)' // coral tint (light)
+                    : 'rgba(70, 240, 210, 0.14)', // teal tint (dark)
+              }),
             }}
           >
-            <Typography
-              variant="body2"
-              fontWeight={600}
-              color={isDifferent ? 'warning.dark' : 'text.primary'}
-            >
-              {label}
-            </Typography>
+           <Typography
+  variant="body2"
+  fontWeight={600}
+  sx={{
+    color: isDifferent
+      ? theme.palette.mode === 'light'
+        ? theme.palette.text.primary   // 👈 dark text in light mode
+        : theme.palette.primary.main   // 👈 teal in dark mode
+      : theme.palette.text.primary,
+  }}
+>
+  {label}
+</Typography>
 
-            <Typography
-              variant="body2"
-              color={isDifferent ? 'warning.dark' : 'text.secondary'}
-              textAlign="right"
-            >
-              {String(currentItem[key])}
-            </Typography>
+<Typography
+  variant="body2"
+  sx={{
+    color: isDifferent
+      ? theme.palette.mode === 'light'
+        ? theme.palette.text.secondary // 👈 darker neutral
+        : theme.palette.primary.main
+      : theme.palette.text.secondary,
+    textAlign: 'right',
+  }}
+>
+  {String(currentItem[key])}
+</Typography>
+
           </Box>
         );
       })}

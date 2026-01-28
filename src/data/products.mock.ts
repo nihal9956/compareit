@@ -30,7 +30,7 @@ import infinix_tab from '../assets/infinix-tab.webp';
 import samsung_f9_tab from '../assets/samsung-f9-tab.webp';
 import domo from '../assets/domo-tab.webp';
 
-import { Product } from '../features/compare/compare.types';
+import { Product } from '../types/product.types';
 
 export type ProductCategory = 'Mobiles' | 'Laptops' | 'Tablets';
 

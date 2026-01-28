@@ -9,8 +9,9 @@ import {
   useMediaQuery,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { Product } from './compare.types';
+import { Product } from '../../types/product.types';
 import { CompareTable } from './CompareTable';
+import { MIN_COMPARE_ITEMS } from './compare.constants';
 
 interface ComparePanelProps {
   items: Product[];
@@ -39,7 +40,7 @@ export const ComparePanel: React.FC<ComparePanelProps> = ({
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-  if (items.length < 2) return null;
+  if (items.length < MIN_COMPARE_ITEMS) return null;
 
   return (
     <Drawer

@@ -19,8 +19,7 @@ import BedtimeIcon from '@mui/icons-material/Bedtime';
 import SunnyIcon from '@mui/icons-material/Sunny';
 import SearchIcon from '@mui/icons-material/Search';
 
-import Logo from '../assets/logo.webp';
-import LogoDark from '../assets/logo-dark.webp';
+import Logo from '../assets/logo.png';
 import { useColorMode } from '../theme/ThemeContext';
 import { categories } from '../data/categories';
 
@@ -130,11 +129,11 @@ return (
       }}
     >
       {/* Logo */}
-      <Box>
+      <Box display={'flex'} alignItems={'center'} justifyContent={'right'}>
         <img
-          src={mode === 'dark' ? LogoDark : Logo}
+          src={Logo}
           alt="logo"
-          style={{ width: '200px', objectFit: 'contain' }}
+          style={{ width: '150px', objectFit: 'contain',borderRadius:'18px' }}
         />
       </Box>
 

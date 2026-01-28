@@ -9,7 +9,7 @@ import {
   useTheme,
   Box,
 } from '@mui/material';
-import { Product } from '../compare/compare.types';
+import { Product } from '../../types/product.types';
 
 interface ProductCardProps {
   product: Product;
@@ -48,19 +48,20 @@ const ProductCard: React.FC<ProductCardProps> = ({
   return (
     <Box sx={{ height: '100%' }}>
       <Card
-        sx={{
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          borderRadius: '1rem',
-          border: isCompared
-            ? `2px solid ${theme.palette.primary.main}`
-            : `1px solid ${theme.palette.divider}`,
-          backgroundColor: isCompared
-            ? theme.palette.action.selected
-            : theme.palette.background.paper,
-        }}
-      >
+  sx={{
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    borderRadius: '16px',
+    transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+    boxShadow: '0 4px 12px rgba(0,0,0,0.06)',
+    '&:hover': {
+      transform: 'translateY(-4px)',
+      boxShadow: '0 12px 28px rgba(0,0,0,0.12)',
+    },
+  }}
+>
+
         {/* Image */}
         <Box
           component="img"
@@ -93,27 +94,76 @@ const ProductCard: React.FC<ProductCardProps> = ({
         {/* Button pinned to bottom */}
         <CardActions sx={{ justifyContent: 'center', mt: 'auto' }}>
           <Button
-            variant="contained"
-            color="primary"
-            disabled={disableCompare && !isCompared}
             aria-pressed={isCompared}
-            sx={{ m: 2, px: 3 }}
-            onClick={handleClick}
-          >
-            {buttonLabel}
-          </Button>
+  aria-disabled={disableCompare && !isCompared}
+
+  variant={isCompared ? 'contained' : 'outlined'}
+  color={isCompared ? 'primary' : 'inherit'}
+  disabled={disableCompare && !isCompared}
+  sx={{
+    m: 2,
+    px: 3,
+    borderRadius: 999,
+
+    ...(isCompared
+      ? {}
+      : {
+          borderColor: theme.palette.divider,
+          color: theme.palette.text.primary,
+          backgroundColor:
+            theme.palette.mode === 'light'
+              ? '#F3F4F6'
+              : '#1F2937',
+          '&:hover': {
+            backgroundColor:
+              theme.palette.mode === 'light'
+                ? '#E5E7EB'
+                : '#374151',
+          },
+        }),
+  }}
+  onClick={handleClick}
+>
+  {buttonLabel}
+</Button>
+
         </CardActions>
       </Card>
     </Box>
   );
 };
 
-export default ProductCard;
+export default React.memo(ProductCard);
 
 /* Small helper */
-const InfoRow = ({ label, value }: { label: string; value: string }) => (
-  <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 1 }}>
-    <Typography fontWeight={600}>{label}:</Typography>
-    <Typography>{value}</Typography>
+const InfoRow = ({
+  label,
+  value,
+}: {
+  label: string;
+  value: string;
+}) => (
+  <Box
+    sx={{
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      mt: 1,
+      px: 1.5,
+      py: 0.75,
+      borderRadius: 0.2,
+      backgroundColor: (theme) =>
+        theme.palette.mode === 'light'
+          ? '#F9FAFB'
+          : '#1F2937',
+    }}
+  >
+    <Typography variant="body2" fontWeight={500} color="text.secondary">
+      {label}
+    </Typography>
+    <Typography variant="body2" fontWeight={600}>
+      {value}
+    </Typography>
   </Box>
 );
+
