@@ -16,8 +16,17 @@ export function useCompare() {
 
 
   const remove = (id: string) => {
-    setItems((prev) => prev.filter((p) => p.id !== id));
-  };
+  setItems((prev) => {
+    const next = prev.filter((p) => p.id !== id);
+
+    if (next.length < 2) {
+      setIsOpen(false);
+    }
+
+    return next;
+  });
+};
+
 
   const clear = () => {
     setItems([]);

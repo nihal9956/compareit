@@ -7,6 +7,7 @@ interface ProductListProps {
   products?: Product[];
   comparisonItems: Product[];
   onCompare: (product: Product) => void;
+  onRemoveCompare: (id: string) => void;
   onOpenCompare: () => void;
   disableCompare: boolean;
 }
@@ -15,6 +16,7 @@ const ProductList: React.FC<ProductListProps> = ({
   products,
   comparisonItems,
   onCompare,
+  onRemoveCompare,
   onOpenCompare,
   disableCompare,
 }) => {
@@ -40,8 +42,7 @@ const ProductList: React.FC<ProductListProps> = ({
           md: 'repeat(3, minmax(280px, 1fr))',
           lg: 'repeat(4, minmax(280px, 1fr))',
         },
-            alignItems: 'stretch', 
-
+        alignItems: 'stretch',
         gap: 3,
       }}
     >
@@ -50,6 +51,7 @@ const ProductList: React.FC<ProductListProps> = ({
           key={product.id}
           product={product}
           onCompare={onCompare}
+          onRemoveCompare={onRemoveCompare}
           onOpenCompare={onOpenCompare}
           isCompared={comparisonItems.some(
             (item) => item.id === product.id

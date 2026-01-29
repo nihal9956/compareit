@@ -79,6 +79,7 @@ const ProductComparePage: React.FC = () => {
             comparisonItems={comparisonItems}
             onCompare={add}
             onOpenCompare={open}
+            onRemoveCompare={remove}   // ✅ THIS
             disableCompare={comparisonItems.length >= 3}
           />
         )}

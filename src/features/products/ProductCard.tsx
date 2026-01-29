@@ -8,12 +8,15 @@ import {
   Tooltip,
   useTheme,
   Box,
+  IconButton,
 } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import { Product } from '../../types/product.types';
 
 interface ProductCardProps {
   product: Product;
   onCompare: (product: Product) => void;
+  onRemoveCompare: (id: string) => void;
   onOpenCompare: () => void;
   isCompared: boolean;
   comparisonCount: number;
@@ -23,6 +26,7 @@ interface ProductCardProps {
 const ProductCard: React.FC<ProductCardProps> = ({
   product,
   onCompare,
+  onRemoveCompare,
   onOpenCompare,
   isCompared,
   comparisonCount,
@@ -30,7 +34,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
 }) => {
   const theme = useTheme();
 
-  const handleClick = () => {
+  const handlePrimaryClick = () => {
     if (isCompared && comparisonCount >= 2) {
       onOpenCompare();
       return;
@@ -48,20 +52,45 @@ const ProductCard: React.FC<ProductCardProps> = ({
   return (
     <Box sx={{ height: '100%' }}>
       <Card
-  sx={{
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    borderRadius: '16px',
-    transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-    boxShadow: '0 4px 12px rgba(0,0,0,0.06)',
-    '&:hover': {
-      transform: 'translateY(-4px)',
-      boxShadow: '0 12px 28px rgba(0,0,0,0.12)',
-      cursor: 'pointer',
-    },
-  }}
->
+        sx={{
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          borderRadius: '16px',
+          position: 'relative',
+          transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.06)',
+          '&:hover': {
+            transform: 'translateY(-4px)',
+            boxShadow: '0 12px 28px rgba(0,0,0,0.12)',
+          },
+        }}
+      >
+        {/* Small remove button */}
+        {isCompared && (
+          <IconButton
+            aria-label={`Remove ${product.name} from comparison`}
+            size="small"
+            onClick={() => onRemoveCompare(product.id)}
+            sx={{
+              position: 'absolute',
+              top: 8,
+              right: 8,
+              backgroundColor:
+                theme.palette.mode === 'light'
+                  ? '#F3F4F6'
+                  : '#1F2937',
+              '&:hover': {
+                backgroundColor:
+                  theme.palette.mode === 'light'
+                    ? '#E5E7EB'
+                    : '#374151',
+              },
+            }}
+          >
+            <CloseIcon fontSize="small" />
+          </IconButton>
+        )}
 
         {/* Image */}
         <Box
@@ -93,42 +122,22 @@ const ProductCard: React.FC<ProductCardProps> = ({
           <InfoRow label="Warranty" value={product.warranty} />
         </CardContent>
 
-        {/* Button pinned to bottom */}
+        {/* Main CTA */}
         <CardActions sx={{ justifyContent: 'center', mt: 'auto' }}>
           <Button
             aria-pressed={isCompared}
-  aria-disabled={disableCompare && !isCompared}
-
-  variant={isCompared ? 'contained' : 'outlined'}
-  color={isCompared ? 'primary' : 'inherit'}
-  disabled={disableCompare && !isCompared}
-  sx={{
-    m: 2,
-    px: 3,
-    borderRadius: 999,
-
-    ...(isCompared
-      ? {}
-      : {
-          borderColor: theme.palette.divider,
-          color: theme.palette.text.primary,
-          backgroundColor:
-            theme.palette.mode === 'light'
-              ? '#F3F4F6'
-              : '#1F2937',
-          '&:hover': {
-            backgroundColor:
-              theme.palette.mode === 'light'
-                ? '#E5E7EB'
-                : '#374151',
-          },
-        }),
-  }}
-  onClick={handleClick}
->
-  {buttonLabel}
-</Button>
-
+            disabled={disableCompare && !isCompared}
+            variant={isCompared ? 'contained' : 'outlined'}
+            color={isCompared ? 'primary' : 'inherit'}
+            sx={{
+              m: 2,
+              px: 3,
+              borderRadius: 999,
+            }}
+            onClick={handlePrimaryClick}
+          >
+            {buttonLabel}
+          </Button>
         </CardActions>
       </Card>
     </Box>
@@ -137,7 +146,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
 export default React.memo(ProductCard);
 
-/* Small helper */
+/* Helper */
 const InfoRow = ({
   label,
   value,
@@ -153,7 +162,7 @@ const InfoRow = ({
       mt: 1,
       px: 1.5,
       py: 0.75,
-      borderRadius: 0.2,
+      borderRadius: 0.5,
       backgroundColor: (theme) =>
         theme.palette.mode === 'light'
           ? '#F9FAFB'
@@ -168,4 +177,3 @@ const InfoRow = ({
     </Typography>
   </Box>
 );
-
